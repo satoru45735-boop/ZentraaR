@@ -1,0 +1,21 @@
+name: Build ZentraRPG Launcher
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+      - name: Build (32-bit)
+        shell: cmd
+        run: |
+          rc /nologo resource.rc
+          cl /nologo /O2 /MT /EHsc /DUNICODE /D_UNICODE main.cpp resource.res /link /SUBSYSTEM:WINDOWS /MACHINE:X86 /OUT:ZentraRPG_Launcher.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZentraRPG_Launcher
+          path: ZentraRPG_Launcher.exe
